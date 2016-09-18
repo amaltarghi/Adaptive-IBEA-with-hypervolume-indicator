@@ -1,3 +1,4 @@
 # Adaptive-IBEA with hypervolume indicator
-## contributors: 
+## Contributors:
+* [Mahmut CAVDAR](http://www.github.com/mcavdar)
 
