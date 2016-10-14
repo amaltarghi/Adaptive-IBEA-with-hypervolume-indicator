@@ -164,17 +164,20 @@ def Hypervolume_Indicator_Based_Selection_Multiobjective_Search(fun, lbounds, ub
                 #Step 2 - Fitness assignment:
                 #return (pArray, indicatorArray,fitnessArray,cValueMaxIndicator);
                 arrayStep2 = fitness_assignment(F,referencePointZ,kValue);
-                
+                F = arrayStep2[0];
                 
                 #Step 3 - Environmental selection: 
                 #return (initialPopulationP, pArray, fitnessArray, indicatorArray);
-                arrayStep3 = environmental_selection(initialPopulationP, arrayStep2[0],arrayStep2[1],arrayStep2[2],alphaValuePopulationSize,arrayStep2[3],kValue);
-                
+                arrayStep3 = environmental_selection(initialPopulationP, F,arrayStep2[1],arrayStep2[2],alphaValuePopulationSize,arrayStep2[3],kValue);
+                initialPopulationP = arrayStep3[0];
+                F = arrayStep3[1];
+                indicatorArray = arrayStep3[3];
                 #print('initialPopulationP after Step3', len(arrayStep3[0]))
                 
                 #Step 4 - Termination:
                 if mValueCounter > maxGenerationNumber:
-                    paretoSetApproximation = non_dominated_selection(arrayStep3[0], arrayStep3[3]);
+                    paretoSetApproximation,indicatorArray = non_dominated_selection(initialPopulationP, indicatorArray);
+                     
                     #paretoSetApproximation = arrayStep3[0];
                     
                     #print('Final Solutions: ', paretoSetApproximation)
@@ -183,13 +186,13 @@ def Hypervolume_Indicator_Based_Selection_Multiobjective_Search(fun, lbounds, ub
                 
                 #Step 5 - Mating selection:
                 #return parentPopulation;
-                arrayStep5 = binary_tournament_selection(arrayStep3[0], arrayStep3[1],arrayStep3[2]);
+                arrayStep5 = binary_tournament_selection(initialPopulationP, F,arrayStep3[2]);
                 
                 #print('parentPopulation: ', len(arrayStep5) )
                 
                 #Step 6 - Variation:
                 #return variationPopulationP
-                mutationBabyPopulation = variation(arrayStep3[0],arrayStep5);
+                mutationBabyPopulation = variation(arrayStep5);
                 F2 = [fun(x) for x in mutationBabyPopulation];
                 F = np.concatenate((F,F2),axis=0);
                 initialPopulationP = np.concatenate((initialPopulationP, mutationBabyPopulation),axis=0);
@@ -216,9 +219,9 @@ def non_dominated_selection(initialPopulationP, indicatorArray):
     indicatorArray=np.delete(indicatorArray,listDominatedPoint,0)
     indicatorArray=np.delete(indicatorArray,listDominatedPoint,1)
    
-    return paretoSetApproximation
+    return (paretoSetApproximation,indicatorArray)
     
-def variation(initialPopulationP, parentPopulation):
+def variation(parentPopulation):
     
     recombinationBabyPopulation = recombination(parentPopulation);
     mutationBabyPopulation = mutation(recombinationBabyPopulation);
@@ -473,7 +476,7 @@ def coco_optimize(solver, fun, max_evals, max_runs=1e9):
 # ===============================================
 ######################### CHANGE HERE ########################################
 # CAVEAT: this might be modified from input args
-budget = 2  # maxfevals = budget x dimension ### INCREASE budget WHEN THE DATA CHAIN IS STABLE ###
+budget = 4  # maxfevals = budget x dimension ### INCREASE budget WHEN THE DATA CHAIN IS STABLE ###
 max_runs = 1e9  # number of (almost) independent trials per problem instance
 number_of_batches = 1  # allows to run everything in several batches
 current_batch = 1      # 1..number_of_batches
