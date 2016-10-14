@@ -152,10 +152,12 @@ def Hypervolume_Indicator_Based_Selection_Multiobjective_Search(fun, lbounds, ub
 
         if fun.number_of_objectives == 2:
             print('Start')
+            # population initalization
+            F = [fun(x) for x in initialPopulationP];
+
             
             while True:
                 #print('initialPopulationP: ', initialPopulationP)
-                F = [fun(x) for x in initialPopulationP];
                 #print('mValueCounter: ', mValueCounter)
                 #print('populationP in Coco: ', len(F))
                 
@@ -187,10 +189,15 @@ def Hypervolume_Indicator_Based_Selection_Multiobjective_Search(fun, lbounds, ub
                 
                 #Step 6 - Variation:
                 #return variationPopulationP
-                initialPopulationP = variation(arrayStep3[0],arrayStep5);
-                mValueCounter += 1;
+                mutationBabyPopulation = variation(arrayStep3[0],arrayStep5);
+                F2 = [fun(x) for x in mutationBabyPopulation];
+                F = np.concatenate((F,F2),axis=0);
+                initialPopulationP = np.concatenate((initialPopulationP, mutationBabyPopulation),axis=0);
                 
-                #print('initialPopulationP after Step6', len(initialPopulationP));
+                
+                mValueCounter += 1;
+                print('baby after Step6', len(mutationBabyPopulation));
+                print('initialPopulationP after Step6', len(initialPopulationP));
                    
         budget -= chunk
         
@@ -216,12 +223,11 @@ def variation(initialPopulationP, parentPopulation):
     recombinationBabyPopulation = recombination(parentPopulation);
     mutationBabyPopulation = mutation(recombinationBabyPopulation);
     
-    variationPopulationP = np.concatenate((initialPopulationP, mutationBabyPopulation),axis=0);
     
     #print('recombinationBabyPopulation: ', len(recombinationBabyPopulation));
     #print('mutationBabyPopulation', len(mutationBabyPopulation));
     
-    return variationPopulationP; 
+    return mutationBabyPopulation; 
 
 def mutation(babyPopulation):
     #mutationBabyPopulation = np.zeros((0,len(babyPopulation[0])));
