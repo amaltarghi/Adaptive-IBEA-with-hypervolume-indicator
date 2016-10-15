@@ -27,6 +27,8 @@ import cocoex
 from cocoex import Suite, Observer, log_level
 verbose = 1
 
+import random
+
 try: import cma  # cma.fmin is a solver option, "pip install cma" installs cma
 except: pass
 try: from scipy.optimize import fmin_slsqp  # "pip install scipy" installs scipy
@@ -278,7 +280,7 @@ def recombination(parentPopulation):
                 
                 recombinationBabyPopulation = np.append(recombinationBabyPopulation, [baby2], axis = 0);
     
-    return recombinationBabyPopulation;
+    return np.array(random.sample(recombinationBabyPopulation, 2*len(parentPopulation)));
     
 def binary_tournament_selection(initialPopulationP, pArray, fitnessArray):
     maxParentPopulation = len(initialPopulationP);
