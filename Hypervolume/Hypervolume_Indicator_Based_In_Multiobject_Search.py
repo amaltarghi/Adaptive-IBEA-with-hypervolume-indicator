@@ -124,9 +124,9 @@ def Hypervolume_Indicator_Based_Selection_Multiobjective_Search(fun, lbounds, ub
     dim= len(lbounds)
     
     #Input:
-    alphaValuePopulationSize = 100; # population size
+    alphaValuePopulationSize = 10; # population size
     kValue = 0.05; # fitness scaling factor
-    maxGenerationNumber = 100; # max number of generation
+    maxGenerationNumber = 10; # max number of generation
     referencePointZ = np.array([2,2]);
     
     #Step 1    
@@ -145,7 +145,7 @@ def Hypervolume_Indicator_Based_Selection_Multiobjective_Search(fun, lbounds, ub
             #print('Start')         
                 
             while True:            
-                #print ("initialPopulationP", initialPopulationP);
+                print ("initialPopulationP", initialPopulationP);
                 #Step 2 - Fitness assignment:
                 #return (pArrayNormalisation, indicatorArray, fitnessArray, cValueMaxIndicator);
                 Fnormalisation,indicatorArray,fitnessArray, cValueMaxIndicator  = fitness_assignment(F,referencePointZ,kValue);
@@ -471,7 +471,7 @@ SOLVER = Hypervolume_Indicator_Based_Selection_Multiobjective_Search
 suite_name = "bbob-biobj"
 #suite_name = "bbob"
 suite_instance = "year:2016"
-suite_options = "dimensions: 2,3,5,10"  # "dimensions: 2,3,5,10,20 "  # if 40 is not desired
+suite_options = "dimensions: 2"  # "dimensions: 2,3,5,10,20 "  # if 40 is not desired
 observer_name = suite_name
 observer_options = (
     ' result_folder: %s_on_%s_budget%04dxD '
