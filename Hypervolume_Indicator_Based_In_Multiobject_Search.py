@@ -1,33 +1,24 @@
-#!/usr/bin/env python
-"""Use case for the COCO experimentation module `cocoex` which can be used as
-template.
-
-Usage from a system shell::
-
-    python example_experiment.py 3 1 20
-
-runs the first of 20 batches with maximal budget
-of 3 * dimension f-evaluations.
-
-Usage from a python shell::
-
-    >>> import example_experiment as ee
-    >>> ee.main(3, 1, 1)  # doctest: +ELLIPSIS
-    Benchmarking solver...
-
-does the same but runs the "first" of one single batch.
+# -*- coding: utf-8 -*-
 """
+Created on Tue Oct 18 13:01:47 2016
+
+@author: mc
+"""
+
+#!/usr/bin/env python
+
 from __future__ import absolute_import, division, print_function, unicode_literals
 try: range = xrange
 except NameError: pass
 import os, sys
+import math
 import time
 import numpy as np  # "pip install numpy" installs numpy
 import cocoex
 from cocoex import Suite, Observer, log_level
 verbose = 1
 
-import random
+import random 
 
 try: import cma  # cma.fmin is a solver option, "pip install cma" installs cma
 except: pass
@@ -46,7 +37,7 @@ def print_flush(*args):
 def ascetime(sec):
     """return elapsed time as str.
 
-    Example: return `"0h33:21"` if `sec == 33*60 + 21`.
+    Example: return `"0h33:21"` if `sec == 33*60 + 21`. 
     """
     h = sec / 60**2
     m = 60 * (h - h // 1)
@@ -131,160 +122,148 @@ def Hypervolume_Indicator_Based_Selection_Multiobjective_Search(fun, lbounds, ub
     """Efficient implementation of uniform random search between `lbounds` and `ubounds`."""
     lbounds, ubounds = np.array(lbounds), np.array(ubounds)
     dim= len(lbounds)
-    max_chunk_size = 1 + 4e4 / dim
-
-    while budget > 0:
-        chunk = int(min([budget, max_chunk_size]));
-        # about five times faster than "for k in range(budget):..."
-
-        #Input:
-
-        alphaValuePopulationSize = chunk; # population size
-        kValue = 0.05; # fitness scaling factor
-        maxGenerationNumber = 10; # max number of generation
-        referencePointZ = np.array([2,2]);
-
-        #Output:
-        #paretoSetApproximation
-
-        #Step 1 - Initialization:
-        initialPopulationP = lbounds + (ubounds - lbounds) * np.random.rand(chunk, dim);
-        #initialPopulationP = np.random.rand(10, dim)*10;
+    
+    #Input:
+    alphaValuePopulationSize = 10; # population size
+    kValue = 0.05; # fitness scaling factor
+    maxGenerationNumber = 10; # max number of generation
+    referencePointZ = np.array([2,2]);
+    
+    #Step 1    
+    initialPopulationP = lbounds + (ubounds - lbounds) * np.random.rand(alphaValuePopulationSize, dim);
+    F = [fun(x) for x in initialPopulationP];
+    budget -= len(initialPopulationP);
+    #Output:
+    paretoSetApproximation = np.array(initialPopulationP);
+    
+    
+    while budget > 0:        
+        
         mValueCounter = 0;
-
+        
         if fun.number_of_objectives == 2:
-            print('Start')
-            # population initalization
-            F = [fun(x) for x in initialPopulationP];
-
-
-            while True:
-                #print('initialPopulationP: ', initialPopulationP)
-                #print('mValueCounter: ', mValueCounter)
-                #print('populationP in Coco: ', len(F))
-
+            #print('Start')         
+                
+            while True:            
+                print ("initialPopulationP", initialPopulationP);
                 #Step 2 - Fitness assignment:
-                #return (pArray, indicatorArray,fitnessArray,cValueMaxIndicator);
-                arrayStep2 = fitness_assignment(F,referencePointZ,kValue);
-                F = arrayStep2[0];
-
-                #Step 3 - Environmental selection:
-                #return (initialPopulationP, pArray, fitnessArray, indicatorArray);
-                arrayStep3 = environmental_selection(initialPopulationP, F,arrayStep2[1],arrayStep2[2],alphaValuePopulationSize,arrayStep2[3],kValue);
-                initialPopulationP = arrayStep3[0];
-                F = arrayStep3[1];
-                indicatorArray = arrayStep3[3];
-                #print('initialPopulationP after Step3', len(arrayStep3[0]))
-
+                #return (pArrayNormalisation, indicatorArray, fitnessArray, cValueMaxIndicator);
+                Fnormalisation,indicatorArray,fitnessArray, cValueMaxIndicator  = fitness_assignment(F,referencePointZ,kValue);
+                
+                
+                
+                #Step 3 - Environmental selection: 
+                #return (initialPopulationP, pArray, pArrayNormalisation, fitnessArray, indicatorArray);
+                initialPopulationP, F,Fnormalisation, fitnessArray, indicatorArray  = environmental_selection(initialPopulationP, F,Fnormalisation,indicatorArray,fitnessArray,alphaValuePopulationSize,cValueMaxIndicator,kValue);
+                
+#                initialPopulationP = arrayStep3[0];
+#                F = arrayStep3[1];
+#                Fnormalisation = arrayStep3[2];
+#                fitnessArray = arrayStep3[3];
+#                indicatorArray = arrayStep3[4];
+                
+                #print("len population apres step3",len(initialPopulationP))
+                
                 #Step 4 - Termination:
-                if mValueCounter > maxGenerationNumber:
+                if mValueCounter >= maxGenerationNumber or budget<0:
                     paretoSetApproximation,indicatorArray = non_dominated_selection(initialPopulationP, indicatorArray);
-
-                    #paretoSetApproximation = arrayStep3[0];
-
-                    #print('Final Solutions: ', paretoSetApproximation)
-                    print('End')
+                    #print('End')
                     break;
-
+                
                 #Step 5 - Mating selection:
                 #return parentPopulation;
-                arrayStep5 = binary_tournament_selection(initialPopulationP, F,arrayStep3[2]);
-
-                #print('parentPopulation: ', len(arrayStep5) )
-
+                parentPopulation = binary_tournament_selection(initialPopulationP, F, fitnessArray);
+                
+                
                 #Step 6 - Variation:
                 #return variationPopulationP
-                mutationBabyPopulation = variation(arrayStep5);
+                mutationBabyPopulation = variation(parentPopulation);
+                
                 F2 = [fun(x) for x in mutationBabyPopulation];
+                
+                budget -= len(mutationBabyPopulation);
+                
                 F = np.concatenate((F,F2),axis=0);
+                
                 initialPopulationP = np.concatenate((initialPopulationP, mutationBabyPopulation),axis=0);
 
-
+                
                 mValueCounter += 1;
-                print('baby after Step6', len(mutationBabyPopulation));
-                print('initialPopulationP after Step6', len(initialPopulationP));
-
-        budget -= chunk
-
+                   
+        
     return paretoSetApproximation;
-
-
-def non_dominated_selection(initialPopulationP, indicatorArray):
+    
+    
+def non_dominated_selection(initialPopulationP, indicatorArray):    
     paretoSetApproximation = np.array(initialPopulationP)
     listDominatedPoint = []
 
     for i in range(indicatorArray.shape[1]):
         if(indicatorArray.min(0)[i]<0):
             listDominatedPoint.append(i)
-
-    paretoSetApproximation=np.delete(paretoSetApproximation, listDominatedPoint,0)
+    
+    paretoSetApproximation=np.delete(paretoSetApproximation, listDominatedPoint,0) 
     indicatorArray=np.delete(indicatorArray,listDominatedPoint,0)
     indicatorArray=np.delete(indicatorArray,listDominatedPoint,1)
-
+   
     return (paretoSetApproximation,indicatorArray)
-
+    
 def variation(parentPopulation):
-
+    
     recombinationBabyPopulation = recombination(parentPopulation);
     mutationBabyPopulation = mutation(recombinationBabyPopulation);
-
-
-    #print('recombinationBabyPopulation: ', len(recombinationBabyPopulation));
-    #print('mutationBabyPopulation', len(mutationBabyPopulation));
-
-    return mutationBabyPopulation;
+    
+    #print('parentPopulation: ', len(parentPopulation));
+    #print('recombinationBabyPopulation: ', recombinationBabyPopulation);
+    #print('mutationBabyPopulation', mutationBabyPopulation);
+    
+    return mutationBabyPopulation; 
 
 def mutation(babyPopulation):
     #mutationBabyPopulation = np.zeros((0,len(babyPopulation[0])));
-    possibilityThreshold = 0.001;
+    possibilityThreshold = 0.1;
     for baby in babyPopulation:
         possibility = np.random.random();
         if (possibility < possibilityThreshold) :
-            index1 = np.random.randint(len(babyPopulation[0]));
-            index2 = np.random.randint(len(babyPopulation[0]));
-            if(index1 != index2):
-                temporalValueBaby = baby[index1];
-                baby[index1] = baby[index2];
-                baby[index2] = temporalValueBaby
+            
+            normalisation = random.normalvariate(0, 1);
 
+            normalisationArray = [random.normalvariate(0,1) for i in babyPopulation];
+            sigmaValueArray = [pow(10,-2) for i in babyPopulation];
+            
+            t1 = 1/ math.sqrt(2*len(babyPopulation));
+            t2 = 1/ math.sqrt(2*math.sqrt(len(babyPopulation)))
+            for i in range(len(sigmaValueArray)):
+                sigmaValueArray[i] = sigmaValueArray[i]* math.exp(t1*normalisation + t2*normalisationArray[i]);
+                babyPopulation[i] = babyPopulation[i] + sigmaValueArray[i]*normalisationArray[i];
+                
     return babyPopulation;
-
+    
 def recombination(parentPopulation):
-    localisationValue = np.random.randint(1,len(parentPopulation[0]));
     recombinationBabyPopulation = np.zeros((0,len(parentPopulation[0])));
+    parentPopulationSize = len(parentPopulation);
+    while len(parentPopulation) > 1:
+        parents = random.sample(range(len(parentPopulation)), 2);
+        a1 = random.uniform(-0.25,1.25);
+        a2 = random.uniform(-0.25,1.25);  
+                        
+        baby1 = np.zeros(len(parentPopulation[parents[0]]));
+        baby2 = np.zeros(len(parentPopulation[parents[0]]));
+        
+        for k in range(len(parentPopulation[parents[0]])):
+            baby1[k]= parentPopulation[ parents[0] ][k]*a1 + parentPopulation[ parents[1] ][k]*(1-a1);
+            baby2[k]= parentPopulation[ parents[1] ][k]*a2 + parentPopulation[ parents[0] ][k]*(1-a2);
+        recombinationBabyPopulation = np.append(recombinationBabyPopulation, [baby1], axis = 0);                
+        recombinationBabyPopulation = np.append(recombinationBabyPopulation, [baby2], axis = 0);
+        
+        parentPopulation = np.delete(parentPopulation,parents, 0)
+        
+    return random.sample(recombinationBabyPopulation, int(parentPopulationSize/2));
 
-    for i in range(len(parentPopulation)):
-        for j in range(i+1,len(parentPopulation)):
-            if (i != j) :
-                geneIndex = 0;
-
-                parent1 = np.array(parentPopulation[i]);
-                parent2 = np.array(parentPopulation[j]);
-
-                baby1 = np.array(parentPopulation[i]);
-                baby2 = np.array(parentPopulation[j]);
-
-                while geneIndex <= len(parentPopulation[0]) :
-
-                    baby1[geneIndex-1] = parent1[geneIndex-1];
-                    baby2[geneIndex-1] = parent2[geneIndex-1];
-
-                    if (geneIndex % localisationValue) == 0 :
-                        temporalParent = np.array(parent1);
-                        parent1 = np.array(parent2);
-                        parent2 = np.array(temporalParent);
-
-                    geneIndex += 1;
-
-                recombinationBabyPopulation = np.append(recombinationBabyPopulation, [baby1], axis = 0);
-
-                recombinationBabyPopulation = np.append(recombinationBabyPopulation, [baby2], axis = 0);
-
-    return np.array(random.sample(recombinationBabyPopulation, 2*len(parentPopulation)));
 
 def binary_tournament_selection(initialPopulationP, pArray, fitnessArray):
     maxParentPopulation = len(initialPopulationP);
-
+    
     parentPopulation = np.zeros((maxParentPopulation,len(initialPopulationP[0])));
     parentPopulationCounter = 0;
     #print(pArray);
@@ -298,64 +277,67 @@ def binary_tournament_selection(initialPopulationP, pArray, fitnessArray):
             #print('parent 2: ',pArray[parentIndex[0]])
             parentPopulation[parentPopulationCounter] = initialPopulationP[parentIndex[0]];
         parentPopulationCounter += 1;
-
-    #print('parents',parentPopulation)
+        
+    #print('parents',parentPopulation)    
     return parentPopulation;
+    
 
-
-
+    
 def fitness_assignment(pArray, referencePointZ, kValue):
-
-    pArray = np.array(pArray);
-    fitnessArray = np.zeros(len(pArray))
+    pArrayNormalisation = np.array(pArray,dtype=float);
+    pArray = np.array(pArray,dtype=float);
+    
+    fitnessArray = np.zeros(len(pArrayNormalisation));
 
     minf1 = min(pArray[:,0]);
     maxf1 = max(pArray[:,0]);
     minf2 = min(pArray[:,1]);
     maxf2 = max(pArray[:,1]);
-
-    pArray[:,0]=(pArray[:,0]- minf1)/(maxf1-minf1);
-    pArray[:,1]=(pArray[:,1]- minf2)/(maxf2-minf2);
-
-
-    indicatorArray = np.zeros((len(pArray),len(pArray)));
+    
+    pArrayNormalisation[:,0]=(pArray[:,0]- minf1)/(maxf1-minf1);
+    pArrayNormalisation[:,1]=(pArray[:,1]- minf2)/(maxf2-minf2);
+        
+        
+    indicatorArray = np.zeros((len(pArrayNormalisation),len(pArrayNormalisation)));
     cValueMaxIndicator = 0;
+    
+    
+    #indicatorArray2 = [(indicator_value(pArray2[x],pArray2[y],referencePointZ)) for x, y in np.ndindex(pArray2.shape)]
+    indicatorArray2 = [(indicator_value(pArrayNormalisation[x],pArrayNormalisation[y],referencePointZ)) for x, y in np.ndindex(len(indicatorArray),len(indicatorArray))]
 
-    for f1 in range(len(pArray)):
-        for f2 in range(len(pArray)):
-            indicatorArray[f1,f2]=indicator_value(pArray[f1],pArray[f2],referencePointZ);
+    #print(indicatorArray2)
 
+    indicatorArray =  np.reshape(indicatorArray2, (math.sqrt(len(indicatorArray2)), math.sqrt(len(indicatorArray2))));
     cValueMaxIndicator = np.amax(np.absolute(indicatorArray))
+    
 
-    for f1 in range(len(pArray)):
-        for f2 in range(len(pArray)):
+    for f1 in range(len(pArrayNormalisation)):
+        for f2 in range(len(pArrayNormalisation)):
             if (f1 != f2):
                 fitnessArray[f1] -= np.exp(-indicatorArray[f2,f1] / (cValueMaxIndicator * kValue));
-
-    #print (pArray)
-    return (pArray, indicatorArray, fitnessArray, cValueMaxIndicator);
-
-def environmental_selection(initialPopulationP, pArray, indicatorArray, fitnessArray, alphaValue, cValueMaxIndicator, kValue):
+    
+    return (pArrayNormalisation, indicatorArray, fitnessArray, cValueMaxIndicator);
+        
+def environmental_selection(initialPopulationP, pArray, pArrayNormalisation ,indicatorArray, fitnessArray, alphaValue, cValueMaxIndicator, kValue): 
 
     while (len(pArray) > alphaValue):
-
+        
         minFitnessIndex = np.argmin(fitnessArray);
-
         pArray=np.delete(pArray,minFitnessIndex,0)
+        pArrayNormalisation=np.delete(pArrayNormalisation,minFitnessIndex,0);
 
-
+        
         for i in range(len(fitnessArray)):
-            for j in range(len(fitnessArray)):
-                if i!=j:
-                    fitnessArray[i] = fitnessArray[i] + np.exp((-indicatorArray[minFitnessIndex,j]) / (cValueMaxIndicator * kValue));
-
+            fitnessArray[i] = fitnessArray[i] + np.exp((-indicatorArray[minFitnessIndex,i]) / (cValueMaxIndicator * kValue));
+      
+        
         initialPopulationP=np.delete(initialPopulationP,minFitnessIndex, 0)
         fitnessArray=np.delete(fitnessArray,minFitnessIndex, 0)
         indicatorArray = np.delete(np.delete(indicatorArray,minFitnessIndex,1),minFitnessIndex,0)
-
-    return (initialPopulationP, pArray, fitnessArray, indicatorArray);
-
-
+    
+    return (initialPopulationP, pArray, pArrayNormalisation, fitnessArray, indicatorArray);
+    
+    
 def indicator_value(x1, x2, referencePointZ):
     ix2 = abs(referencePointZ[0]-x2[0])*abs(referencePointZ[1]-x2[1]);
     ix1 = abs(referencePointZ[0]-x1[0])*abs(referencePointZ[1]-x1[1]);
@@ -367,12 +349,12 @@ def indicator_value(x1, x2, referencePointZ):
     else:
         return ix12-ix1;
 
+        
 
 
+        
 
-
-
-
+        
 # ===============================================
 # loops over a benchmark problem suite
 # ===============================================
@@ -393,7 +375,7 @@ def batch_loop(solver, suite, observer, budget,
             continue
         observer.observe(problem)
         short_info.print(problem) if verbose else None
-        runs = coco_optimize(solver, problem, budget * problem.dimension, max_runs)
+        runs = coco_optimize(solver, problem, budget, max_runs)
         if verbose:
             print_flush("!" if runs > 2 else ":" if runs > 1 else ".")
         short_info.add_evals(problem.evaluations, runs)
@@ -479,7 +461,7 @@ def coco_optimize(solver, fun, max_evals, max_runs=1e9):
 # ===============================================
 ######################### CHANGE HERE ########################################
 # CAVEAT: this might be modified from input args
-budget = 4  # maxfevals = budget x dimension ### INCREASE budget WHEN THE DATA CHAIN IS STABLE ###
+budget = 1000  # maxfevals = budget x dimension ### INCREASE budget WHEN THE DATA CHAIN IS STABLE ###
 max_runs = 1e9  # number of (almost) independent trials per problem instance
 number_of_batches = 1  # allows to run everything in several batches
 current_batch = 1      # 1..number_of_batches
