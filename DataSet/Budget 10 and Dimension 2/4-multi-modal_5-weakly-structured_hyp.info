@@ -1,0 +1,6 @@
+algorithm = 'Hypervolume_Indicator_Based_Selection_Multiobjective_Search', indicator = 'hyp', folder = '4-multi-modal_5-weakly-structured', coco_version = ''
+% HYPERVOLUME INDICATOR BASED SELECTION SEARCH ALGORITHM
+function = 48, dim =  2, bbob-biobj_f48_d02_hyp.dat, 1:4551|1.0e+01, 2:4551|8.8e-04, 3:4551|2.3e-02, 4:4551|1.7e-03, 5:4551|9.3e-03, 6:4551|4.9e-01, 7:4551|1.5e+00, 8:4551|1.1e-01, 9:4551|1.7e-01, 10:4551|3.5e-02
+function = 49, dim =  2, bbob-biobj_f49_d02_hyp.dat, 1:4551|6.5e-01, 2:4551|5.0e-02, 3:4551|2.6e-01, 4:4551|4.6e-02, 5:4551|3.2e+00, 6:4551|8.2e-02, 7:4551|4.7e-03, 8:4551|1.9e-01, 9:4551|1.1e-02, 10:4551|1.9e-01
+function = 51, dim =  2, bbob-biobj_f51_d02_hyp.dat, 1:4551|8.1e-04, 2:4551|1.1e-01, 3:4551|2.1e-02, 4:4551|2.3e-02, 5:4551|2.6e-02, 6:4551|3.0e-01, 7:4551|1.8e-02, 8:4551|1.5e+00, 9:4551|1.1e-03, 10:4551|2.0e-02
+function = 52, dim =  2, bbob-biobj_f52_d02_hyp.dat, 1:4551|1.1e-01, 2:4551|4.8e-03, 3:4551|1.5e-02, 4:4551|2.0e-01, 5:4551|1.2e-01, 6:4551|2.5e-01, 7:4551|3.6e-02, 8:4551|8.1e-03, 9:4551|2.5e-01, 10:4551|4.0e-02

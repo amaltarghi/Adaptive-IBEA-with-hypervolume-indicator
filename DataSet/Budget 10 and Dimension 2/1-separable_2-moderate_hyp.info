@@ -1,0 +1,6 @@
+algorithm = 'Hypervolume_Indicator_Based_Selection_Multiobjective_Search', indicator = 'hyp', folder = '1-separable_2-moderate', coco_version = ''
+% HYPERVOLUME INDICATOR BASED SELECTION SEARCH ALGORITHM
+function =  3, dim =  2, bbob-biobj_f03_d02_hyp.dat, 1:4551|3.4e-03, 2:4551|1.9e-01, 3:4551|3.7e-02, 4:4551|6.2e-03, 5:4551|3.4e-02, 6:4551|4.2e-02, 7:4551|1.9e-02, 8:4551|3.0e-02, 9:4551|5.1e-03, 10:4551|2.0e-03
+function =  4, dim =  2, bbob-biobj_f04_d02_hyp.dat, 1:4551|1.0e-01, 2:4551|3.1e-04, 3:4551|3.7e-04, 4:4551|1.4e-01, 5:4551|2.4e-03, 6:4551|1.2e-03, 7:4551|2.3e-02, 8:4551|2.7e-03, 9:4551|2.0e+00, 10:4551|3.4e-03
+function = 12, dim =  2, bbob-biobj_f12_d02_hyp.dat, 1:4551|3.9e-03, 2:4551|6.2e-04, 3:4551|3.6e-04, 4:4551|6.7e-02, 5:4551|2.7e-01, 6:4551|4.8e-02, 7:4551|1.1e-05, 8:4551|4.6e-04, 9:4551|3.7e-03, 10:4551|9.1e-04
+function = 13, dim =  2, bbob-biobj_f13_d02_hyp.dat, 1:4551|3.5e-01, 2:4551|2.1e-04, 3:4551|1.9e-04, 4:4551|2.7e-05, 5:4551|5.8e-05, 6:4551|1.3e-01, 7:4551|2.2e-05, 8:4551|6.7e-02, 9:4551|2.3e-03, 10:4551|9.8e-01
