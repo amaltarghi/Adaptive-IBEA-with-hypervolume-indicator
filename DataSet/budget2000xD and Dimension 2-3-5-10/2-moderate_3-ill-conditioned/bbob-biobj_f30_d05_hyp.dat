@@ -1,0 +1,60 @@
+%
+% index = 1390, name = bbob_f008_i02_d05__bbob_f014_i04_d05
+% instance = 1, reference value = 9.402096156769080e-001
+% function evaluation | indicator value | target hit
+1	2.289402798507474e-001	2.290867652767773e-001
+2011	2.289402798507474e-001	2.290867652767773e-001
+%
+% index = 1391, name = bbob_f008_i03_d05__bbob_f014_i05_d05
+% instance = 2, reference value = 9.823910313727330e-001
+% function evaluation | indicator value | target hit
+1	5.108972752773957e-001	5.128613839913648e-001
+2011	5.108972752773957e-001	5.128613839913648e-001
+%
+% index = 1392, name = bbob_f008_i07_d05__bbob_f014_i08_d05
+% instance = 3, reference value = 9.146812245279961e-001
+% function evaluation | indicator value | target hit
+1	2.943533997880496e+000	2.951209226666386e+000
+2011	2.943533997880496e+000	2.951209226666386e+000
+%
+% index = 1393, name = bbob_f008_i09_d05__bbob_f014_i10_d05
+% instance = 4, reference value = 9.796315492176230e-001
+% function evaluation | indicator value | target hit
+1	2.413650135936524e-001	2.454708915685031e-001
+2011	2.413650135936524e-001	2.454708915685031e-001
+%
+% index = 1394, name = bbob_f008_i11_d05__bbob_f014_i12_d05
+% instance = 5, reference value = 9.331704113623190e-001
+% function evaluation | indicator value | target hit
+1	7.989350931971082e-001	8.128305161640993e-001
+2011	7.989350931971082e-001	8.128305161640993e-001
+%
+% index = 1395, name = bbob_f008_i13_d05__bbob_f014_i14_d05
+% instance = 6, reference value = 9.566378175197680e-001
+% function evaluation | indicator value | target hit
+1	5.248389604414692e-001	5.370317963702527e-001
+2011	5.248389604414692e-001	5.370317963702527e-001
+%
+% index = 1396, name = bbob_f008_i15_d05__bbob_f014_i16_d05
+% instance = 7, reference value = 9.782644804871931e-001
+% function evaluation | indicator value | target hit
+1	8.439824637432091e-001	8.511380382023764e-001
+2011	8.439824637432091e-001	8.511380382023764e-001
+%
+% index = 1397, name = bbob_f008_i17_d05__bbob_f014_i18_d05
+% instance = 8, reference value = 9.837617672095140e-001
+% function evaluation | indicator value | target hit
+1	6.895618917722861e-001	6.918309709189364e-001
+2011	6.895618917722861e-001	6.918309709189364e-001
+%
+% index = 1398, name = bbob_f008_i19_d05__bbob_f014_i21_d05
+% instance = 9, reference value = 9.852601790678061e-001
+% function evaluation | indicator value | target hit
+1	4.336188859375351e-001	4.365158322401660e-001
+2011	4.336188859375351e-001	4.365158322401660e-001
+%
+% index = 1399, name = bbob_f008_i21_d05__bbob_f014_i22_d05
+% instance = 10, reference value = 9.878610460049040e-001
+% function evaluation | indicator value | target hit
+1	7.574888095614780e-001	7.585775750291838e-001
+2011	7.574888095614780e-001	7.585775750291838e-001
