@@ -1,5 +1,0 @@
-algorithm = 'Hypervolume_Indicator_Based_Selection_Multiobjective_Search', indicator = 'hyp', folder = '3-ill-conditioned_3-ill-conditioned', coco_version = '1.2.1.2'
-% HYPERVOLUME INDICATOR BASED SELECTION SEARCH ALGORITHM
-function = 35, dim =  2, bbob-biobj_f35_d02_hyp.dat, 1:185|7.9e-01, 2:185|2.0e-01, 3:185|6.3e-01, 4:185|1.1e+00, 5:185|3.2e-01, 6:185|2.7e-01, 7:185|9.2e-01, 8:185|3.1e-01, 9:185|6.4e-01, 10:185|4.2e+00
-function = 36, dim =  2, bbob-biobj_f36_d02_hyp.dat, 1:185|1.6e-01, 2:185|5.5e-01, 3:185|1.1e+01, 4:185|3.6e-01, 5:185|9.5e-01, 6:185|4.1e-01, 7:185|3.6e+00, 8:185|2.0e-01, 9:185|1.9e+00, 10:185|3.0e-01
-function = 41, dim =  2, bbob-biobj_f41_d02_hyp.dat, 1:185|6.0e-01, 2:185|2.1e+00, 3:185|1.6e+00, 4:185|1.5e+00, 5:185|4.0e-01, 6:185|6.4e-01, 7:185|1.9e-01, 8:185|2.5e-01, 9:185|1.4e+00, 10:185|4.5e+00
