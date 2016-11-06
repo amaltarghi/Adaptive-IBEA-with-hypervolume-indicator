@@ -1,0 +1,5 @@
+algorithm = 'random_search', indicator = 'hyp', folder = '5-weakly-structured_5-weakly-structured', coco_version = '1.2'
+% A SIMPLE RANDOM SEARCH ALGORITHM
+function = 53, dim =  2, bbob-biobj_f53_d02_hyp.dat, 1:8002|1.2e-04, 2:8002|5.8e-05, 3:8002|6.8e-05, 4:8002|6.7e-05, 5:8002|9.7e-02, 6:8002|7.7e-05, 7:8002|4.0e-05, 8:8002|5.7e-05, 9:8002|7.3e-05, 10:8002|4.5e-03
+function = 54, dim =  2, bbob-biobj_f54_d02_hyp.dat, 1:8002|2.4e-02, 2:8002|2.2e-02, 3:8002|8.5e-04, 4:8002|4.4e-04, 5:8002|3.4e-04, 6:8002|1.9e-01, 7:8002|1.0e-02, 8:8002|2.8e-04, 9:8002|3.4e-03, 10:8002|6.3e-04
+function = 55, dim =  2, bbob-biobj_f55_d02_hyp.dat, 1:8002|5.9e-04, 2:8002|4.9e-02, 3:8002|1.8e-03, 4:8002|7.1e-03, 5:8002|1.2e-02, 6:8002|1.5e-03, 7:8002|7.3e-03, 8:8002|2.7e-02, 9:8002|6.4e-02, 10:8002|4.7e-03
